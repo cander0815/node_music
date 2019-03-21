@@ -3,13 +3,14 @@ const request = require('request');
 const musicApi = require('music-api');
 const path = require('path');
 const ProgressBar = require('./progress');
+const config = require('./config');
 let searchData = [];
 let page = 1;
 
 async function search(name, callback) {
   console.log(`开始搜索`, name);
   try {
-    const res = await musicApi.searchSong('netease', {
+    const res = await musicApi.searchSong(config.type, {
       key: name,
       limit: 10,
       page
@@ -62,7 +63,7 @@ async function getSongUrl(i, callback) {
     console.log('开始查询歌曲的地址');
     const item = searchData[i];
     const songID = item.id + '';
-    const res = await musicApi.getSong('netease', {
+    const res = await musicApi.getSong(config.type, {
       id: songID,
       raw: false,
       br: 999000
