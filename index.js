@@ -1,9 +1,11 @@
 const song = require('./song');
 const readLine = require('./readLine');
 const request = require('request');
+const config = require('./config');
 let searchName;
 console.log('欢迎使用');
 console.log('在使用过程中输入‘exit’, 或使用键盘‘ctrl+c’, 退出该程序');
+console.log(`已选择数据源: ${config.type}-${config.typeName[config.typeName]}`);
 
 function checkNetwork() {
   console.log('检查网络连接');
