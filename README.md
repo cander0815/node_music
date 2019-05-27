@@ -4,7 +4,7 @@ search and down music in terminal
 
 ### 使用方法
 
-1. 下载代码以后 `npm install ` of `yarn install`;
+1. 下载代码以后 `npm install ` or `yarn install`;
 
 2. 在`config.js`修改自己想要的数据源;
 
