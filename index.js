@@ -38,9 +38,14 @@ function checkNetwork() {
         }
       },
       {
-        question: '请输入要下载的索引或`q`(上一页)`w`(下一页)>    ',
+        question: '请输入要下载的索引或`e`重新搜索歌名`q`(上一页)`w`(下一页)>    ',
         isNumber: true,
         fun(data, close, next) {
+          if (data === 'e') {
+            song.restart();
+            next(0);
+            return 1;
+          }
           if (data === 'q' || data === 'w') {
             song.changePage(data, (err) => {
               if (err) {

@@ -6,9 +6,15 @@ const ProgressBar = require('./progress');
 const config = require('./config');
 let searchData = [];
 let page = 1;
+let maxPage = 1;
+let oldName = '';
 
 async function search(name, callback) {
-  console.log(`开始搜索`, name);
+  if (oldName !== name) {
+    page = 1;
+  }
+  oldName = name;
+  console.log(`开始搜索第${page}页`, name);
   try {
     const res = await musicApi.searchSong(config.type, {
       key: name,
@@ -43,6 +49,7 @@ async function search(name, callback) {
           console.log(error);
           callback(1);
         } else {
+          maxPage = Math.ceil(res.total / 10);
           console.log(`当前第${page}页, 共${Math.ceil(res.total / 10)}页`);
           console.log('在索引输入框中输入`w`,并回车,切换下一页, 输入`q`, 并回车, 切换上一页');
           callback();
@@ -71,7 +78,7 @@ async function getSongUrl(i, callback) {
     if (res.success) {
       console.log('查询歌曲的地址成功');
       const url = res.url;
-      const songName = `${item.name + '-' + item.artists}${url.substr(url.lastIndexOf('.'), url.length)}`;
+      const songName = `${item.name.replace(/\//g, '_') + '-' + item.artists.replace(/\//g, '_')}${url.substr(url.lastIndexOf('.'), url.length)}`;
       console.log('开始下载', songName);
       const songStream = fs.createWriteStream(path.join(__dirname, './songs/' + songName));
       // 总共要下载的数量
@@ -127,12 +134,25 @@ function changePage(type, callback) {
   }
   if (type === 'w') {
     page += 1;
+    if (page > maxPage) {
+      console.log('已经是最后一页');
+      callback(1);
+      return
+    }
     callback();
   }
+}
+
+function restart() {
+  page = 1;
+  maxPage = 1;
+  oldName = '';
+  searchData = []
 }
 
 module.exports = {
   search,
   getSongUrl,
-  changePage
+  changePage,
+  restart
 };
